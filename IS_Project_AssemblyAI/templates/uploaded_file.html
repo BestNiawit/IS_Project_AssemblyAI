@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h1>Uploaded File</h1>
+        <div class="file-info">
+            <h2>File Name:</h2>
+            <p>{{ filename }}</p>
+        </div>
+        {% if transcript %}
+            <div class="transcription">
+                <h2>Transcription:</h2>
+                <p>{{ transcript }}</p>
+            </div>
+            <div class="summary">
+                <h2>Summary:</h2>
+                <p>{{ summary }}</p>
+            </div>
+        {% else %}
+            <div class="transcription">
+                <h2>Transcription:</h2>
+                <p>Error: Unable to recognize speech</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
