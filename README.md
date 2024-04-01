@@ -8,6 +8,9 @@ Flask 2.0 or higher
 assemblyai 0.2.0 or higher
 transformers 4.13.1 or higher
 
+# Install Requirement
+pip install -r requirements.txt
+
 # Setup
 Install the required packages by running pip install -r requirements.txt
 Set the ASSEMBLYAI_API_KEY environment variable to your AssemblyAI API key
