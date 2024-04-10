@@ -95,6 +95,10 @@ tqdm==4.66.2
     #   huggingface-hub
     #   nltk
     #   transformers
+torch==1.13.1
+torchvision==0.14.1
+torchaudio==0.13.1
+    # Added by user
 transformers==4.39.2
     # via -r requirements.in
 typing-extensions==4.10.0
