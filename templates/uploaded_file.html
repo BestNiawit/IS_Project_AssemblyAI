@@ -1,31 +1,85 @@
 {% extends "base.html" %}
-
 {% block title %}Transcription Result{% endblock %}
-
 {% block content %}
 <section class="card">
-    <span class="badge">Ready</span>
-    <h1>Transcription Complete</h1>
-    <p class="meta"><strong>File:</strong> {{ filename }}</p>
-    <a class="btn" href="/">Upload Another File</a>
+  <span class="badge">Ready</span>
+  <h1 class="title-gradient">Transcription Complete</h1>
+  <p class="meta"><strong>File:</strong> {{ filename }}</p>
+  <a class="btn" href="/">Upload Another File</a>
 </section>
 
 {% if transcript %}
 <section class="card">
-    <h2>Transcription</h2>
-    <div class="content-block">{{ transcript }}</div>
+  <h2>Transcription</h2>
+  <div class="toolbar">
+    <button class="btn-mini" type="button" data-copy-target="transcript-content">
+      Copy text
+    </button>
+    <button class="btn-mini" type="button" data-download-target="transcript-content" data-download-name="transcript.txt">
+      Download .txt
+    </button>
+  </div>
+  <div id="transcript-content" class="content-block">{{ transcript }}</div>
 </section>
 
 {% if summary %}
 <section class="card">
-    <h2>Summary</h2>
-    <div class="content-block">{{ summary }}</div>
+  <h2>Summary</h2>
+  <div class="toolbar">
+    <button class="btn-mini" type="button" data-copy-target="summary-content">
+      Copy summary
+    </button>
+    <button class="btn-mini" type="button" data-download-target="summary-content" data-download-name="summary.txt">
+      Download .txt
+    </button>
+  </div>
+  <div id="summary-content" class="content-block">{{ summary }}</div>
 </section>
 {% endif %}
 {% else %}
 <section class="card">
-    <h2>Transcription</h2>
-    <p>Error: Unable to recognize speech.</p>
+  <h2>Transcription</h2>
+  <p>Error: Unable to recognize speech.</p>
 </section>
 {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.querySelectorAll("[data-copy-target]").forEach(function (button) {
+    button.addEventListener("click", async function () {
+      const targetId = button.getAttribute("data-copy-target");
+      const target = document.getElementById(targetId);
+      if (!target) return;
+
+      try {
+        await navigator.clipboard.writeText(target.textContent || "");
+        const oldText = button.textContent;
+        button.textContent = "Copied!";
+        setTimeout(function () {
+          button.textContent = oldText;
+        }, 1200);
+      } catch (e) {
+        button.textContent = "Copy failed";
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-download-target]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      const targetId = button.getAttribute("data-download-target");
+      const filename = button.getAttribute("data-download-name") || "result.txt";
+      const target = document.getElementById(targetId);
+      if (!target) return;
+
+      const blob = new Blob([target.textContent || ""], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(url);
+    });
+  });
+</script>
 {% endblock %}

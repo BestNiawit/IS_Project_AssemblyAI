@@ -2,7 +2,7 @@
 {% block content %}
 <section class="card">
   <span class="badge">Fast workflow</span>
-  <h1>AssemblyAI Audio Transcriber</h1>
+  <h1 class="title-gradient">AssemblyAI Audio Transcriber</h1>
   <p>Upload an audio file and get both transcription and a concise summary.</p>
   <p class="meta">Supported formats: WAV, MP3, FLAC</p>
 </section>
@@ -14,22 +14,32 @@
 <section class="card">
   <h2>Upload File</h2>
   <form id="upload-form" class="stack" action="/" method="post" enctype="multipart/form-data">
-    <label for="file">Choose audio file</label>
+    <div id="drop-zone" class="drop-zone" tabindex="0">
+      Drag & drop audio here or click to browse
+    </div>
     <input
       class="input-file"
       type="file"
       id="file"
       name="file"
       accept="audio/wav, audio/mp3, audio/flac"
+      style="display: none"
       required
     />
+    <div id="validation-message" class="alert" style="display: none"></div>
+    <audio id="audio-preview" class="audio-preview" controls style="display: none"></audio>
     <p class="meta">
-      Tip: shorter clips are processed faster and are easier to summarize.
+      Tip: max 50MB, and shorter clips are processed faster.
     </p>
     <button id="upload-btn" type="submit" class="btn">Upload and Transcribe</button>
     <div id="uploading-state" class="uploading" aria-live="polite">
       <span class="spinner" aria-hidden="true"></span>
       <span>Uploading and processing audio...</span>
+    </div>
+    <div id="upload-steps" class="steps" aria-live="polite">
+      <div class="step is-active">Uploading</div>
+      <div class="step">Transcribing</div>
+      <div class="step">Summarizing</div>
     </div>
   </form>
 </section>
@@ -40,12 +50,96 @@
   const uploadForm = document.getElementById("upload-form");
   const uploadButton = document.getElementById("upload-btn");
   const uploadingState = document.getElementById("uploading-state");
+  const uploadSteps = document.getElementById("upload-steps");
+  const stepItems = uploadSteps ? uploadSteps.querySelectorAll(".step") : [];
+  const fileInput = document.getElementById("file");
+  const dropZone = document.getElementById("drop-zone");
+  const preview = document.getElementById("audio-preview");
+  const validationMessage = document.getElementById("validation-message");
+  const allowedExtensions = ["wav", "mp3", "flac"];
+  const maxSize = 50 * 1024 * 1024;
+
+  function setStep(index) {
+    stepItems.forEach(function (step, i) {
+      step.classList.toggle("is-active", i === index);
+    });
+  }
+
+  function showValidation(message) {
+    if (!validationMessage) return;
+    validationMessage.textContent = message;
+    validationMessage.style.display = message ? "block" : "none";
+  }
+
+  function handleFile(file) {
+    if (!file) return false;
+    const ext = file.name.split(".").pop().toLowerCase();
+    if (!allowedExtensions.includes(ext)) {
+      showValidation("Only WAV, MP3, FLAC files are allowed.");
+      fileInput.value = "";
+      if (preview) preview.style.display = "none";
+      return false;
+    }
+    if (file.size > maxSize) {
+      showValidation("File too large. Please upload up to 50MB.");
+      fileInput.value = "";
+      if (preview) preview.style.display = "none";
+      return false;
+    }
+    showValidation("");
+    if (preview) {
+      preview.src = URL.createObjectURL(file);
+      preview.style.display = "block";
+    }
+    return true;
+  }
+
+  if (fileInput) {
+    fileInput.addEventListener("change", function () {
+      handleFile(fileInput.files[0]);
+    });
+  }
+
+  if (dropZone && fileInput) {
+    dropZone.addEventListener("click", function () { fileInput.click(); });
+    dropZone.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") fileInput.click();
+    });
+    ["dragenter", "dragover"].forEach(function (evt) {
+      dropZone.addEventListener(evt, function (e) {
+        e.preventDefault();
+        dropZone.classList.add("is-dragover");
+      });
+    });
+    ["dragleave", "drop"].forEach(function (evt) {
+      dropZone.addEventListener(evt, function (e) {
+        e.preventDefault();
+        dropZone.classList.remove("is-dragover");
+      });
+    });
+    dropZone.addEventListener("drop", function (e) {
+      const file = e.dataTransfer && e.dataTransfer.files ? e.dataTransfer.files[0] : null;
+      if (!file) return;
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      fileInput.files = dt.files;
+      handleFile(file);
+    });
+  }
 
   if (uploadForm && uploadButton && uploadingState) {
-    uploadForm.addEventListener("submit", function () {
+    uploadForm.addEventListener("submit", function (e) {
+      if (!fileInput || !handleFile(fileInput.files[0])) {
+        e.preventDefault();
+        return;
+      }
       uploadButton.classList.add("is-loading");
       uploadButton.textContent = "Processing...";
       uploadingState.classList.add("is-visible");
+      if (uploadSteps) uploadSteps.classList.add("is-visible");
+      setStep(0);
+      setTimeout(function () { setStep(1); }, 900);
+      setTimeout(function () { setStep(2); }, 2200);
     });
   }
 </script>
