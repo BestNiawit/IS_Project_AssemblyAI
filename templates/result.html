@@ -1,13 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transcription Result</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Transcription Result{% endblock %}
+
+{% block content %}
+<section class="card">
     <h1>Transcription Result</h1>
-    <pre>{{ transcript }}</pre>
-    <a href="/">Upload another file</a>
-</body>
-</html>
+    <a class="btn" href="/">Upload Another File</a>
+</section>
+
+<section class="card">
+    <h2>Transcript</h2>
+    <div class="content-block">{{ transcript }}</div>
+</section>
+{% endblock %}

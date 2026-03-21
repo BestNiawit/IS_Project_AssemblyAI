@@ -1,14 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Upload File</title>
-</head>
-<body>
-    <h1>Upload a File</h1>
+{% extends "base.html" %}
+
+{% block title %}Upload File{% endblock %}
+
+{% block content %}
+<section class="card">
+    <h1>Upload Audio File</h1>
+    <p>Select a file to transcribe with AssemblyAI.</p>
+</section>
+
+<section class="card">
     <form action="/" method="POST" enctype="multipart/form-data">
-        <input type="file" name="file" accept="audio/wav, audio/mp3, audio/flac" required>
-        <button type="submit">Upload</button>
+        <label for="file">Choose file</label>
+        <input class="input-file" id="file" type="file" name="file" accept="audio/wav, audio/mp3, audio/flac" required>
+        <button class="btn" type="submit">Upload</button>
     </form>
-</body>
-</html>
+</section>
+{% endblock %}
