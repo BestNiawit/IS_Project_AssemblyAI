@@ -8,10 +8,19 @@ from transformers import pipeline
 app = Flask(__name__, template_folder='templates')
 app.config['UPLOAD_FOLDER'] = 'uploads'
 aai.settings.api_key = "8676fae4821e46e88952da5563a89101"
+summarizer = None
 
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ['wav', 'mp3', 'flac']
+
+
+def get_summarizer():
+    """Lazy-load summarizer only on first use."""
+    global summarizer
+    if summarizer is None:
+        summarizer = pipeline('summarization')
+    return summarizer
 
 
 @app.route('/')
@@ -29,10 +38,10 @@ def upload_file():
         transcriber = aai.Transcriber()
         transcript = transcriber.transcribe(file_path)
         if transcript is not None:
-            # Initialize the summarizer
-            summarizer = pipeline('summarization')
+            # Load the summarizer on demand to speed up app startup.
+            current_summarizer = get_summarizer()
             # Generate the summary
-            summary = summarizer(transcript.text, max_length=250, min_length=30, do_sample=False)
+            summary = current_summarizer(transcript.text, max_length=250, min_length=30, do_sample=False)
             # Extract the summary text
             summary_text = summary[0]['summary_text']
             # Render the response template with the summary text

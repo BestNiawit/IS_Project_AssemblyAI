@@ -1,26 +1,31 @@
 {% extends "base.html" %}
 
+{% block title %}Transcription Result{% endblock %}
+
 {% block content %}
-    <div class="container">
-        <h1>Uploaded File</h1>
-        <div class="file-info">
-            <h2>File Name:</h2>
-            <p>{{ filename }}</p>
-        </div>
-        {% if transcript %}
-            <div class="transcription">
-                <h2>Transcription:</h2>
-                <p>{{ transcript }}</p>
-            </div>
-            <div class="summary">
-                <h2>Summary:</h2>
-                <p>{{ summary }}</p>
-            </div>
-        {% else %}
-            <div class="transcription">
-                <h2>Transcription:</h2>
-                <p>Error: Unable to recognize speech</p>
-            </div>
-        {% endif %}
-    </div>
+<section class="card">
+    <span class="badge">Ready</span>
+    <h1>Transcription Complete</h1>
+    <p class="meta"><strong>File:</strong> {{ filename }}</p>
+    <a class="btn" href="/">Upload Another File</a>
+</section>
+
+{% if transcript %}
+<section class="card">
+    <h2>Transcription</h2>
+    <div class="content-block">{{ transcript }}</div>
+</section>
+
+{% if summary %}
+<section class="card">
+    <h2>Summary</h2>
+    <div class="content-block">{{ summary }}</div>
+</section>
+{% endif %}
+{% else %}
+<section class="card">
+    <h2>Transcription</h2>
+    <p>Error: Unable to recognize speech.</p>
+</section>
+{% endif %}
 {% endblock %}
