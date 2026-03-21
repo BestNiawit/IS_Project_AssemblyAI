@@ -16,6 +16,15 @@
         --ring: rgba(37, 99, 235, 0.2);
       }
 
+      body.dark {
+        --bg: #0b1220;
+        --surface: #111827;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --border: #253041;
+        --ring: rgba(129, 140, 248, 0.35);
+      }
+
       * {
         box-sizing: border-box;
       }
@@ -27,6 +36,35 @@
         background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 220px);
         color: var(--text);
         min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        z-index: -1;
+        border-radius: 999px;
+        filter: blur(60px);
+        opacity: 0.45;
+        pointer-events: none;
+      }
+
+      body::before {
+        width: 260px;
+        height: 260px;
+        background: #93c5fd;
+        top: -90px;
+        left: -80px;
+      }
+
+      body::after {
+        width: 320px;
+        height: 320px;
+        background: #c4b5fd;
+        right: -110px;
+        top: 120px;
       }
 
       .topbar {
@@ -44,6 +82,24 @@
         padding: 12px 16px;
         font-weight: 700;
         color: #0f172a;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        justify-content: space-between;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .logo-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
       }
 
       .page {
@@ -53,7 +109,8 @@
       }
 
       .card {
-        background-color: var(--surface);
+        background:
+          linear-gradient(160deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.86));
         border: 1px solid var(--border);
         border-radius: 14px;
         padding: 20px;
@@ -95,7 +152,7 @@
         display: inline-block;
         border: 0;
         border-radius: 10px;
-        background: var(--primary);
+        background: linear-gradient(135deg, #2563eb, #4f46e5);
         color: #fff;
         padding: 10px 16px;
         font-size: 15px;
@@ -108,7 +165,7 @@
       }
 
       .btn:hover {
-        background: var(--primary-hover);
+        background: linear-gradient(135deg, #1d4ed8, #4338ca);
       }
 
       .btn:active {
@@ -142,6 +199,27 @@
         box-shadow: 0 0 0 4px var(--ring);
       }
 
+      .drop-zone {
+        border: 2px dashed #bfdbfe;
+        border-radius: 12px;
+        padding: 16px;
+        text-align: center;
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+      }
+
+      .drop-zone.is-dragover {
+        border-color: #2563eb;
+        background: #eff6ff;
+        color: #1d4ed8;
+      }
+
+      .audio-preview {
+        width: 100%;
+        margin-top: 8px;
+      }
+
       label {
         font-weight: 600;
         color: #111827;
@@ -164,6 +242,13 @@
         border-radius: 999px;
       }
 
+      .title-gradient {
+        background: linear-gradient(135deg, #1d4ed8, #7c3aed);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
       .meta {
         color: var(--muted);
         font-size: 14px;
@@ -173,10 +258,47 @@
         white-space: pre-wrap;
         word-break: break-word;
         color: var(--text);
-        background: #f9fafb;
+        background: linear-gradient(180deg, #fbfdff, #f8fafc);
         border: 1px solid var(--border);
         border-radius: 10px;
         padding: 14px;
+      }
+
+      .toolbar {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 8px;
+      }
+
+      .btn-mini {
+        border: 1px solid var(--border);
+        background: #fff;
+        color: #334155;
+        border-radius: 8px;
+        padding: 6px 10px;
+        font-size: 12px;
+        cursor: pointer;
+      }
+
+      .theme-toggle {
+        border: 1px solid var(--border);
+        background: #fff;
+        color: #334155;
+        border-radius: 8px;
+        padding: 6px 10px;
+        font-size: 12px;
+        cursor: pointer;
+      }
+
+      body.dark .theme-toggle,
+      body.dark .btn-mini {
+        background: #0f172a;
+        color: #cbd5e1;
+      }
+
+      .btn-mini:hover {
+        border-color: #c7d2fe;
+        color: #1e3a8a;
       }
 
       .alert {
@@ -195,6 +317,34 @@
         font-size: 14px;
         color: var(--muted);
         margin-top: 6px;
+      }
+
+      .steps {
+        display: none;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-top: 6px;
+      }
+
+      .steps.is-visible {
+        display: grid;
+      }
+
+      .step {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 6px 10px;
+        text-align: center;
+        font-size: 12px;
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.8);
+      }
+
+      .step.is-active {
+        color: #1e3a8a;
+        border-color: #bfdbfe;
+        background: #dbeafe;
+        font-weight: 700;
       }
 
       .uploading.is-visible {
@@ -255,13 +405,60 @@
           transition: none !important;
         }
       }
+
+      body.dark .topbar {
+        background: rgba(15, 23, 42, 0.8);
+      }
+
+      body.dark .card {
+        background: linear-gradient(160deg, rgba(17, 24, 39, 0.96), rgba(15, 23, 42, 0.92));
+      }
+
+      body.dark .input-file,
+      body.dark .content-block {
+        background: #0f172a;
+        color: var(--text);
+      }
+
+      body.dark .step {
+        background: rgba(15, 23, 42, 0.85);
+      }
+
+      body.dark .step.is-active {
+        color: #dbeafe;
+        border-color: #4f46e5;
+        background: rgba(79, 70, 229, 0.25);
+      }
     </style>
   </head>
   <body>
     <header class="topbar">
-      <div class="topbar-inner">AssemblyAI Transcriber</div>
+      <div class="topbar-inner">
+        <div class="brand">
+          <span class="logo-dot" aria-hidden="true"></span>
+          <span>AssemblyAI Transcriber</span>
+        </div>
+        <button id="theme-toggle" class="theme-toggle" type="button">Dark</button>
+      </div>
     </header>
     <main class="page">{% block content %}{% endblock %}</main>
+    <script>
+      (function () {
+        const key = "ui-theme";
+        const btn = document.getElementById("theme-toggle");
+        const saved = localStorage.getItem(key);
+        if (saved === "dark") document.body.classList.add("dark");
+        if (btn) {
+          btn.textContent = document.body.classList.contains("dark") ? "Light" : "Dark";
+          btn.addEventListener("click", function () {
+            document.body.classList.toggle("dark");
+            const dark = document.body.classList.contains("dark");
+            localStorage.setItem(key, dark ? "dark" : "light");
+            btn.textContent = dark ? "Light" : "Dark";
+          });
+        }
+      })();
+    </script>
     {% block scripts %}{% endblock %}
   </body>
 </html>
