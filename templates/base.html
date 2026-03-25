@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}AssemblyAI Transcriber{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='logo.svg') }}" />
     <style>
       :root {
         --bg: #f4f7fb;
@@ -95,17 +96,25 @@
       }
 
       .logo-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 999px;
-        background: linear-gradient(135deg, #2563eb, #7c3aed);
-        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+        width: 20px;
+        height: 20px;
+        border-radius: 6px;
+        background-image: url("{{ url_for('static', filename='logo.svg') }}");
+        background-size: cover;
+        background-position: center;
       }
 
       .page {
         max-width: 900px;
         margin: 0 auto;
         padding: 32px 16px 48px;
+      }
+
+      @media (min-width: 900px) {
+        .page {
+          padding-left: 24px;
+          padding-right: 24px;
+        }
       }
 
       .card {
@@ -347,6 +356,36 @@
         font-weight: 700;
       }
 
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .mini-card {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.8);
+      }
+
+      .mini-card h3 {
+        margin: 0 0 6px;
+        font-size: 15px;
+      }
+
+      .mini-card p {
+        margin: 0;
+        font-size: 13px;
+      }
+
+      .footer {
+        text-align: center;
+        color: var(--muted);
+        font-size: 13px;
+        padding: 10px 0 0;
+      }
+
       .uploading.is-visible {
         display: inline-flex;
       }
@@ -394,6 +433,10 @@
 
         h1 {
           font-size: 1.5rem;
+        }
+
+        .grid-3 {
+          grid-template-columns: 1fr;
         }
       }
 
