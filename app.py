@@ -40,12 +40,28 @@ def upload_file():
         if transcript is not None:
             # Load the summarizer on demand to speed up app startup.
             current_summarizer = get_summarizer()
-            # Generate the summary
-            summary = current_summarizer(transcript.text, max_length=250, min_length=30, do_sample=False)
-            # Extract the summary text
-            summary_text = summary[0]['summary_text']
-            # Render the response template with the summary text
-            return render_template('uploaded_file.html', filename=filename, transcript=transcript.text,summary=summary_text)
+
+            raw_text = getattr(transcript, "text", None)
+            if not isinstance(raw_text, str):
+                error_message = "There was an error processing the file. Please try another audio file."
+                return render_template('index.html', error_message=error_message)
+
+            text = raw_text.strip()
+            if not text:
+                error_message = "There was an error processing the file. Please try another audio file."
+                return render_template('index.html', error_message=error_message)
+
+            try:
+                # Generate the summary (keep lengths modest to reduce compute/token usage)
+                summary = current_summarizer(text, max_length=200, min_length=30, do_sample=False)
+                # Extract the summary text
+                summary_text = summary[0]['summary_text']
+                # Render the response template with the summary text
+                return render_template('uploaded_file.html', filename=filename, transcript=text, summary=summary_text)
+            except Exception as e:
+                print(e)
+                error_message = "Failed to summarize the transcript. Please try again with a different file."
+                return render_template('index.html', error_message=error_message)
         else:
             error_message = "There was an error processing the file. Please check the file format and try again."
             return render_template('index.html', error_message=error_message)
@@ -57,7 +73,8 @@ def uploaded_file(filename):
     try:
         transcriber = aai.Transcriber()
         transcript = transcriber.transcribe(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        return render_template('uploaded_file.html', filename=filename, transcript=transcript.text)
+        text = getattr(transcript, "text", None) or ""
+        return render_template('uploaded_file.html', filename=filename, transcript=text)
     except Exception as e:
         print(e)
         error_message = "There was an error processing the file. Please check the file format and try again."
