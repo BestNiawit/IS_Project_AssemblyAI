@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}History{% endblock %}
+{% block content %}
+<section class="card">
+  <span class="badge">Workspace</span>
+  <h1 class="title-gradient">Transcription History</h1>
+  <p class="meta">Saved jobs: {{ total_count }}{% if query or status != "all" %} | Showing: {{ filtered_count }}{% endif %}</p>
+</section>
+
+<section class="card">
+  <form method="get" action="/history" class="history-controls">
+    <div>
+      <label for="q">Search</label>
+      <input id="q" name="q" class="input-file" type="text" value="{{ query }}" placeholder="filename, transcript, summary" />
+    </div>
+    <div>
+      <label for="status">Status</label>
+      <select id="status" name="status" class="input-file">
+        <option value="all" {% if status == "all" %}selected{% endif %}>All</option>
+        <option value="done" {% if status == "done" %}selected{% endif %}>Done</option>
+        <option value="failed" {% if status == "failed" %}selected{% endif %}>Failed</option>
+      </select>
+    </div>
+    <button class="btn" type="submit">Apply</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Jobs</h2>
+  {% if jobs %}
+  <div class="history-list">
+    {% for job in jobs %}
+    <article class="history-item">
+      <div class="history-head">
+        <strong>{{ job.filename }}</strong>
+        <span class="status {{ job.status }}">{{ (job.status or "unknown")|upper }}</span>
+      </div>
+      <p class="history-meta">{{ job.created_at }}</p>
+      {% if job.error_message %}
+      <p class="history-meta">{{ job.error_message }}</p>
+      {% endif %}
+      <div class="history-actions">
+        <a class="btn-link-mini" href="/history/{{ job.id }}">View</a>
+        {% if job.transcript %}
+        <a class="btn-link-mini" href="/history/{{ job.id }}/download/transcript">Transcript</a>
+        {% endif %}
+        {% if job.summary %}
+        <a class="btn-link-mini" href="/history/{{ job.id }}/download/summary">Summary</a>
+        {% endif %}
+        {% if job.translated_transcript %}
+        <a class="btn-link-mini" href="/history/{{ job.id }}/download/translated_transcript">Translated Transcript</a>
+        {% endif %}
+        {% if job.translated_summary %}
+        <a class="btn-link-mini" href="/history/{{ job.id }}/download/translated_summary">Translated Summary</a>
+        {% endif %}
+        {% if job.srt_content %}
+        <a class="btn-link-mini" href="/history/{{ job.id }}/download/srt">SRT</a>
+        {% endif %}
+        {% if job.vtt_content %}
+        <a class="btn-link-mini" href="/history/{{ job.id }}/download/vtt">VTT</a>
+        {% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p>No jobs yet. Upload your first audio from the Upload page.</p>
+  {% endif %}
+</section>
+{% endblock %}

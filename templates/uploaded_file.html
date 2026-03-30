@@ -5,8 +5,16 @@
   <span class="badge">Ready</span>
   <h1 class="title-gradient">Transcription Complete</h1>
   <p class="meta"><strong>File:</strong> {{ filename }}</p>
+  {% if translation_target_label %}
+  <p class="meta"><strong>Translated to:</strong> {{ translation_target_label }}</p>
+  {% endif %}
   <a class="btn" href="/">Upload Another File</a>
+  <a class="btn" href="/history">Open History</a>
 </section>
+
+{% if translation_error_message %}
+<div class="alert">{{ translation_error_message }}</div>
+{% endif %}
 
 {% if transcript %}
 <section class="card">
@@ -22,6 +30,43 @@
   <div id="transcript-content" class="content-block">{{ transcript }}</div>
 </section>
 
+{% if timestamped_rows %}
+<section class="card">
+  <h2>Timestamped Transcript</h2>
+  <div class="toolbar">
+    <button class="btn-mini" type="button" data-copy-target="timestamped-content">
+      Copy timestamped
+    </button>
+    <button class="btn-mini" type="button" data-download-target="timestamped-content" data-download-name="timestamped_transcript.txt">
+      Download .txt
+    </button>
+  </div>
+  <div id="timestamped-content" class="content-block timestamped-content">
+    {% for row in timestamped_rows %}
+    <div class="timestamped-line">
+      <strong>[{{ row.start_label }} - {{ row.end_label }}] Speaker {{ row.speaker }}:</strong>
+      {{ row.text }}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if translated_transcript %}
+<section class="card">
+  <h2>Translated Transcript{% if translation_target_label %} ({{ translation_target_label }}){% endif %}</h2>
+  <div class="toolbar">
+    <button class="btn-mini" type="button" data-copy-target="translated-transcript-content">
+      Copy translation
+    </button>
+    <button class="btn-mini" type="button" data-download-target="translated-transcript-content" data-download-name="translated_transcript.txt">
+      Download .txt
+    </button>
+  </div>
+  <div id="translated-transcript-content" class="content-block">{{ translated_transcript }}</div>
+</section>
+{% endif %}
+
 {% if summary %}
 <section class="card">
   <h2>Summary</h2>
@@ -34,6 +79,51 @@
     </button>
   </div>
   <div id="summary-content" class="content-block">{{ summary }}</div>
+</section>
+{% endif %}
+
+{% if translated_summary %}
+<section class="card">
+  <h2>Translated Summary{% if translation_target_label %} ({{ translation_target_label }}){% endif %}</h2>
+  <div class="toolbar">
+    <button class="btn-mini" type="button" data-copy-target="translated-summary-content">
+      Copy translated summary
+    </button>
+    <button class="btn-mini" type="button" data-download-target="translated-summary-content" data-download-name="translated_summary.txt">
+      Download .txt
+    </button>
+  </div>
+  <div id="translated-summary-content" class="content-block">{{ translated_summary }}</div>
+</section>
+{% endif %}
+
+{% if srt_content %}
+<section class="card">
+  <h2>Subtitles (SRT)</h2>
+  <div class="toolbar">
+    <button class="btn-mini" type="button" data-copy-target="srt-content">
+      Copy SRT
+    </button>
+    <button class="btn-mini" type="button" data-download-target="srt-content" data-download-name="subtitles.srt">
+      Download .srt
+    </button>
+  </div>
+  <div id="srt-content" class="content-block">{{ srt_content }}</div>
+</section>
+{% endif %}
+
+{% if vtt_content %}
+<section class="card">
+  <h2>Subtitles (WebVTT)</h2>
+  <div class="toolbar">
+    <button class="btn-mini" type="button" data-copy-target="vtt-content">
+      Copy VTT
+    </button>
+    <button class="btn-mini" type="button" data-download-target="vtt-content" data-download-name="subtitles.vtt">
+      Download .vtt
+    </button>
+  </div>
+  <div id="vtt-content" class="content-block">{{ vtt_content }}</div>
 </section>
 {% endif %}
 {% else %}

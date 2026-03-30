@@ -31,7 +31,33 @@
     <p class="meta">
       Tip: max 50MB, and shorter clips are processed faster.
     </p>
-    <button id="upload-btn" type="submit" class="btn">Upload and Transcribe</button>
+    <div class="stack">
+      <label for="summary-length">Summary length</label>
+      <select
+        id="summary-length"
+        name="summary_length"
+        class="input-file"
+        aria-label="Summary length"
+      >
+        <option value="short">Short (more concise)</option>
+        <option value="medium" selected>Medium (recommended)</option>
+        <option value="detailed">Detailed (more thorough)</option>
+      </select>
+    </div>
+    <div class="stack">
+      <label for="translation-target">Translate output</label>
+      <select
+        id="translation-target"
+        name="translation_target"
+        class="input-file"
+        aria-label="Translation target"
+      >
+        <option value="none" selected>No translation</option>
+        <option value="thai">Translate to Thai</option>
+        <option value="english">Translate to English</option>
+      </select>
+    </div>
+    <button id="upload-btn" type="submit" class="btn" disabled>Upload and Transcribe</button>
     <div id="uploading-state" class="uploading" aria-live="polite">
       <span class="spinner" aria-hidden="true"></span>
       <span>Uploading and processing audio...</span>
@@ -111,19 +137,31 @@
     validationMessage.style.display = message ? "block" : "none";
   }
 
+  function setSubmitEnabled(enabled) {
+    if (!uploadButton) return;
+    uploadButton.disabled = !enabled;
+  }
+
   function handleFile(file) {
-    if (!file) return false;
+    if (!file) {
+      showValidation("Please select an audio file before uploading.");
+      if (preview) preview.style.display = "none";
+      setSubmitEnabled(false);
+      return false;
+    }
     const ext = file.name.split(".").pop().toLowerCase();
     if (!allowedExtensions.includes(ext)) {
       showValidation("Only WAV, MP3, FLAC files are allowed.");
       fileInput.value = "";
       if (preview) preview.style.display = "none";
+      setSubmitEnabled(false);
       return false;
     }
     if (file.size > maxSize) {
       showValidation("File too large. Please upload up to 50MB.");
       fileInput.value = "";
       if (preview) preview.style.display = "none";
+      setSubmitEnabled(false);
       return false;
     }
     showValidation("");
@@ -131,6 +169,7 @@
       preview.src = URL.createObjectURL(file);
       preview.style.display = "block";
     }
+    setSubmitEnabled(true);
     return true;
   }
 
@@ -168,6 +207,7 @@
   }
 
   if (uploadForm && uploadButton && uploadingState) {
+    setSubmitEnabled(false);
     uploadForm.addEventListener("submit", function (e) {
       if (!fileInput || !handleFile(fileInput.files[0])) {
         e.preventDefault();

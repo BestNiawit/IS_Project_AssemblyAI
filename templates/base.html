@@ -95,6 +95,34 @@
         gap: 10px;
       }
 
+      .topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .nav-link {
+        text-decoration: none;
+        color: #334155;
+        font-size: 13px;
+        font-weight: 700;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 6px 10px;
+        background: #fff;
+      }
+
+      .nav-link:hover {
+        border-color: #c7d2fe;
+        color: #1e3a8a;
+      }
+
       .logo-dot {
         width: 20px;
         height: 20px;
@@ -179,6 +207,12 @@
 
       .btn:active {
         transform: translateY(1px);
+      }
+
+      .btn:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+        transform: none;
       }
 
       .btn:focus-visible {
@@ -273,9 +307,20 @@
         padding: 14px;
       }
 
+      .timestamped-content .timestamped-line {
+        margin-bottom: 8px;
+        line-height: 1.55;
+      }
+
+      .timestamped-content .timestamped-line:last-child {
+        margin-bottom: 0;
+      }
+
       .toolbar {
         display: flex;
         justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 6px;
         margin-bottom: 8px;
       }
 
@@ -386,6 +431,80 @@
         padding: 10px 0 0;
       }
 
+      .history-controls {
+        display: grid;
+        grid-template-columns: 1fr 180px auto;
+        gap: 10px;
+        align-items: end;
+      }
+
+      .history-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .history-item {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.85);
+      }
+
+      .history-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+
+      .status {
+        display: inline-block;
+        border-radius: 999px;
+        padding: 4px 8px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .status.done {
+        background: #dcfce7;
+        color: #166534;
+      }
+
+      .status.failed {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .history-meta {
+        margin: 0;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .history-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 8px;
+      }
+
+      .btn-link-mini {
+        text-decoration: none;
+        border: 1px solid var(--border);
+        background: #fff;
+        color: #334155;
+        border-radius: 8px;
+        padding: 6px 10px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .btn-link-mini:hover {
+        border-color: #c7d2fe;
+        color: #1e3a8a;
+      }
+
       .uploading.is-visible {
         display: inline-flex;
       }
@@ -438,6 +557,19 @@
         .grid-3 {
           grid-template-columns: 1fr;
         }
+
+        .topbar-inner {
+          flex-wrap: wrap;
+        }
+
+        .topbar-actions {
+          width: 100%;
+          justify-content: space-between;
+        }
+
+        .history-controls {
+          grid-template-columns: 1fr;
+        }
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -472,6 +604,16 @@
         border-color: #4f46e5;
         background: rgba(79, 70, 229, 0.25);
       }
+
+      body.dark .nav-link,
+      body.dark .btn-link-mini {
+        background: #0f172a;
+        color: #cbd5e1;
+      }
+
+      body.dark .history-item {
+        background: rgba(15, 23, 42, 0.8);
+      }
     </style>
   </head>
   <body>
@@ -479,9 +621,15 @@
       <div class="topbar-inner">
         <div class="brand">
           <span class="logo-dot" aria-hidden="true"></span>
-          <span>AssemblyAI Transcriber</span>
+          <a href="/" style="text-decoration: none; color: inherit;">AssemblyAI Transcriber</a>
         </div>
-        <button id="theme-toggle" class="theme-toggle" type="button">Dark</button>
+        <div class="topbar-actions">
+          <nav class="nav-links" aria-label="Primary">
+            <a class="nav-link" href="/">Upload</a>
+            <a class="nav-link" href="/history">History</a>
+          </nav>
+          <button id="theme-toggle" class="theme-toggle" type="button">Dark</button>
+        </div>
       </div>
     </header>
     <main class="page">{% block content %}{% endblock %}</main>
