@@ -1,18 +1,22 @@
-{% extends "base.html" %}
-
-{% block title %}Upload File{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Upload File{% endblock %} {% block
+content %}
 <section class="card">
-    <h1>Upload Audio File</h1>
-    <p>Select a file to transcribe with AssemblyAI.</p>
+  <h1>Upload Audio File</h1>
+  <p>Select a file to transcribe with AssemblyAI.</p>
 </section>
 
 <section class="card">
-    <form action="/" method="POST" enctype="multipart/form-data">
-        <label for="file">Choose file</label>
-        <input class="input-file" id="file" type="file" name="file" accept="audio/wav, audio/mp3, audio/flac" required>
-        <button class="btn" type="submit">Upload</button>
-    </form>
+  <form action="/" method="POST" enctype="multipart/form-data">
+    <label for="file">Choose file</label>
+    <input
+      class="input-file"
+      id="file"
+      type="file"
+      name="file"
+      accept="audio/wav, audio/mp3, audio/flac"
+      required
+    />
+    <button class="btn" type="submit">Upload</button>
+  </form>
 </section>
 {% endblock %}

@@ -1,15 +1,12 @@
-{% extends "base.html" %}
-
-{% block title %}Transcription Result{% endblock %}
-
-{% block content %}
+{% extends "base.html" %} {% block title %}Transcription Result{% endblock %} {%
+block content %}
 <section class="card">
-    <h1>Transcription Result</h1>
-    <a class="btn" href="/">Upload Another File</a>
+  <h1>Transcription Result</h1>
+  <a class="btn" href="/">Upload Another File</a>
 </section>
 
 <section class="card">
-    <h2>Transcript</h2>
-    <div class="content-block">{{ transcript }}</div>
+  <h2>Transcript</h2>
+  <div class="content-block">{{ transcript }}</div>
 </section>
 {% endblock %}
